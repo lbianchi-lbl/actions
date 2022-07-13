@@ -48,7 +48,7 @@ runs:
     - name: Install package from PyPI 
       shell: bash -l {0}
       run: |
-        pip install --progress-bar off --yes "${{ inputs.pypi-name }}==${{ inputs.pypi-version }}"
+        pip install --progress-bar off "${{ inputs.pypi-name }}==${{ inputs.pypi-version }}"
 
     - name: Create pip requirements file
       shell: bash -l {0}
