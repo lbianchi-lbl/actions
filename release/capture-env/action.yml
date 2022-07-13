@@ -52,7 +52,7 @@ runs:
 
     - name: Create pip requirements file
       env:
-        _comment_header: ${{ format('# generated from {0}, version {1}', inputs.pypi-name, inputs.release-tag )}}
+        _comment_header: ${{ format('# generated from {0}=={1}', inputs.pypi-name, inputs.pypi-version )}}
         _file_name: ${{ inputs.requirements-file-name }}
       shell: bash -l {0}
       run: |
