@@ -1,0 +1,24 @@
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: Version tag of the release
+        type: string
+        required: true
+      python-name:
+        description: Name of the Python package distribution
+        type: string
+        required: true
+
+jobs:
+
+  capture-env:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: lbianchi-lbl/actions/release/capture-env@main
+        with:
+          pypi-name: ${{ inputs.python-name }}
+          pypi-version: ${{ inputs.release-tag }}
+          python-version: '3.9'
+          upload-artifact: ${{ inputs.python-name }}-${{ inputs.release-tag }}

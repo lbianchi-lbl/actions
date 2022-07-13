@@ -1,0 +1,68 @@
+name: Capture environment
+description: Capture environment for Python package distribution
+
+inputs:
+
+  pypi-name:
+    description: Name of the PyPI package distribution
+    required: true
+
+  pypi-version:
+    description: Version of the PyPI package distribution to install
+    required: true
+
+  python-version:
+    description: Python version to use
+    required: true
+
+  environment-name:
+    description: Name of the Conda environment to use. If '' (default), pypi-name will be used
+    required: false
+    default: ''
+
+  requirements-file-name:
+    description: File name for the requirements file.
+    required: false
+    default: requirements.txt
+
+  environment-file-name:
+    description: File name for the environment file.
+    required: false
+    default: environment.yml
+
+  upload-artifact:
+    description: If given, the generated files will be uploaded as an artifact. Otherwise, their contents will be displayed
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+
+    - name: Set up Conda environment with Python
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: ${{ inputs.environment-name || inputs.pypi-name + '-env' }}
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install package from PyPI 
+      shell: bash -l {0}
+      run: |
+        pip install --progress-bar off --yes "${{ inputs.pypi-name }}==${{ inputs.pypi-version }}"
+
+    - name: Create pip requirements file
+      shell: bash -l {0}
+      run: |
+        pip freeze > "${{ inputs.requirements-file-name }}"
+
+    - name: Create Conda environment file
+      shell: bash -l {0}
+      run: |
+        conda env export --no-builds | grep -v "prefix" > "${{ inputs.environment-file-name }}""
+
+    - name: Upload generated files
+      if: inputs.upload-artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.upload-artifact }}
+        path: ./
