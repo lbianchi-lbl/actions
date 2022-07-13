@@ -58,7 +58,7 @@ runs:
     - name: Create Conda environment file
       shell: bash -l {0}
       run: |
-        conda env export --no-builds | grep -v "prefix" > "${{ inputs.environment-file-name }}""
+        conda env export --no-builds | grep -v "prefix" > "${{ inputs.environment-file-name }}"
 
     - name: Upload generated files
       if: inputs.upload-artifact
