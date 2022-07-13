@@ -1,15 +1,19 @@
+name: Release (test)
 
 on:
   workflow_dispatch:
     inputs:
-      release-tag:
-        description: Version tag of the release
-        type: string
-        required: true
       python-name:
         description: Name of the Python package distribution
         type: string
-        required: true
+        required: false
+        default: "dispatches"
+      release-tag:
+        description: Version tag of the release
+        type: string
+        required: false
+        default: '1.0.0'
+
 
 jobs:
 
