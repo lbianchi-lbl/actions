@@ -42,7 +42,7 @@ runs:
     - name: Set up Conda environment with Python
       uses: conda-incubator/setup-miniconda@v2
       with:
-        activate-environment: ${{ inputs.environment-name || inputs.pypi-name + '-env' }}
+        activate-environment: ${{ inputs.environment-name || format('{0}-env', inputs.pypi-name) }}
         python-version: ${{ inputs.python-version }}
 
     - name: Install package from PyPI 
