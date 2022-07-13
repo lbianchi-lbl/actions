@@ -42,7 +42,7 @@ runs:
     - name: Set up Conda environment with Python
       uses: conda-incubator/setup-miniconda@v2
       with:
-        activate-environment: ${{ inputs.environment-name || format('{0}-env', inputs.pypi-name) }}
+        activate-environment: ${{ inputs.environment-name || format('{0}-{1}-env', inputs.pypi-name, inputs.pypi-version) }}
         python-version: ${{ inputs.python-version }}
 
     - name: Install package from PyPI 
@@ -51,9 +51,13 @@ runs:
         pip install --progress-bar off "${{ inputs.pypi-name }}==${{ inputs.pypi-version }}"
 
     - name: Create pip requirements file
+      env:
+        _comment_header: ${{ format('# generated from {0}, version {1}', inputs.pypi-name, inputs.release-tag )}}
+        _file_name: ${{ inputs.requirements-file-name }}
       shell: bash -l {0}
       run: |
-        pip freeze > "${{ inputs.requirements-file-name }}"
+        echo "$_comment_header" > "$_file_name"
+        pip freeze >> "$_file_name"
 
     - name: Create Conda environment file
       shell: bash -l {0}
