@@ -5,9 +5,14 @@ on:
     inputs:
       python-name:
         description: Name of the Python package distribution
-        type: string
-        required: false
-        default: "dispatches"
+        required: true
+        type: choice
+        options:
+        - idaes-pse
+        - watertap
+        - dispatches
+        - ccsi-foqus
+        default: idaes-pse
       release-tag:
         description: Version tag of the release
         type: string
@@ -18,6 +23,7 @@ on:
 jobs:
 
   capture-env:
+    name: Capture env
     runs-on: ubuntu-latest
     steps:
       - uses: lbianchi-lbl/actions/release/capture-env@main
