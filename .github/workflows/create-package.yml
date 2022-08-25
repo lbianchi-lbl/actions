@@ -54,6 +54,7 @@ jobs:
           pip install --no-cache-dir .
 
       - name: Check that the installed package has the expected tags
+        run: |
           pip show ${{ inputs.pypi-name }} | grep "${{ inputs.release-tag }}"
 
       - name: Run smoke tests
