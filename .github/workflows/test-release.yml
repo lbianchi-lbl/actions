@@ -27,7 +27,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        project: ${{ inputs.project-id }}
+        project:
+          - ${{ inputs.project-id }}
         include:
           - project: idaes-pse
             repository: IDAES/idaes-pse
