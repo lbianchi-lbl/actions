@@ -2,27 +2,46 @@ name: Release (test)
 
 on:
   workflow_dispatch:
+
     inputs:
-      python-name:
-        description: Name of the Python package distribution
+
+      project-id:
+        description: Identifier for the project to release
         required: true
         type: choice
         options:
-        - idaes-pse
+        - idaes
         - watertap
         - dispatches
         - ccsi-foqus
-        default: idaes-pse
+        - pareto
+
       release-tag:
         description: Version tag of the release
         type: string
-        required: false
-        default: '1.0.0'
-
+        required: true
 
 jobs:
 
+  create-package:
+    strategy:
+      fail-fast: true
+      matrix:
+        project: ${{ inputs.project-id }}
+        include:
+          - project: idaes-pse
+            repository: IDAES/idaes-pse
+            pypi-name: idaes-pse
+            test-command: idaes get-extensions --verbose && pip install pytest && wget https://raw.githubusercontent.com/IDAES/idaes-pse/main/pytest.ini && pytest --pyargs idaes -m "not integration"
+    uses: .github/workflows/packaging.yml@main
+    with:
+      release-tag: ${{ inputs.release-tag }}
+      repository: ${{ matrix.repository }}
+      pypi-name: ${{ matrix.pypi-name }}
+      test-command: ${{ matrix.test-command }}
+
   capture-env:
+    if: false
     name: Capture env
     runs-on: ubuntu-latest
     steps:
