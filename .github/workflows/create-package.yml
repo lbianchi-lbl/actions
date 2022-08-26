@@ -37,12 +37,6 @@ on:
         required: false
         default: true
 
-      test-pypi-url:
-        description: URL to the test PyPI index to use
-        type: string
-        required: false
-        default: https://test.pypi.org/simple/
-
       pip-install-retry-wait-time:
         description: Amount of time (in s) to wait before retrying to run pip install
         type: string
@@ -138,7 +132,7 @@ jobs:
      - name: Upload dist files to the test PyPI
        env:
          TWINE_PASSWORD: ${{ secrets.test-pypi-token }}
-         TWINE_REPOSITORY_URL: ${{ inputs.test-pypi-url }}
+         TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
        run: |
          twine upload dist/*
 
@@ -155,8 +149,10 @@ jobs:
      - name: Install ${{ inputs.pypi-name }}==${{ inputs.release-tag }} from test PyPI
        env:
          _wait_time_s: ${{ inputs.pip-install-retry-wait-time }}
+         _pip_install_flags: --progress-bar off --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/
+         _pip_install_target: ${{ inputs.pypi-name }}==${{ inputs.release-tag }}
        run: |
-        until pip install --progress-bar off "${{ inputs.pypi-name }}==${{ inputs.release-tag }}"
+        until pip install $_pip_install_flags "$_pip_install_target"
         do
             echo "pip install failed; waiting $_wait_time_s seconds"
             sleep "$_wait_time_s"
