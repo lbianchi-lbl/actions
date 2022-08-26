@@ -33,7 +33,7 @@ jobs:
           - project: idaes
             repository: IDAES/idaes-pse
             pypi-name: idaes-pse
-            test-command: idaes get-extensions --verbose && pip install pytest && wget https://raw.githubusercontent.com/IDAES/idaes-pse/main/pytest.ini && pytest --pyargs idaes -m "not integration"
+            test-command: idaes get-extensions --extra petsc --verbose && pip install pytest && wget https://raw.githubusercontent.com/IDAES/idaes-pse/main/pytest.ini && pytest --pyargs idaes -m "not integration" -x
     uses: ./.github/workflows/create-package.yml
     with:
       release-tag: ${{ inputs.release-tag }}
