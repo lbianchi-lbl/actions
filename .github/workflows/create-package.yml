@@ -125,6 +125,7 @@ jobs:
      - uses: actions/download-artifact@v3
        with:
          name: dist
+         path: dist
 
      - uses: actions/setup-python@v2
        with:
@@ -176,6 +177,7 @@ jobs:
      - uses: actions/download-artifact@v3
        with:
          name: dist
+         path: dist
 
      - uses: actions/setup-python@v2
        with:
