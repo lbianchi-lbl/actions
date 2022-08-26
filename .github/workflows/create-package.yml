@@ -31,6 +31,27 @@ on:
         type: string
         required: true
 
+      test-pypi-url:
+        description: URL to the test PyPI index to use
+        type: string
+        required: false
+        default: https://test.pypi.org/simple/
+
+      pip-install-retry-wait-time:
+        description: Amount of time (in s) to wait before retrying to run pip install
+        type: string
+        required: false
+        default: "15"
+
+    secrets:
+
+      test-pypi-token:
+        description: Auth token for PyPI (test instance)
+        required: true
+
+      pypi-token:
+        description: Auth token for PyPI
+        required: true
 
 defaults:
   run:
@@ -86,15 +107,82 @@ jobs:
           name: dist
           path: dist/
 
-  upload-test:
-   runs-on: ubuntu-latest
-   needs: [build]
-   steps:
+  upload-test-pypi:
+    runs-on: ubuntu-latest
+    needs: [build]
+    env:
+      TWINE_USERNAME: __token__
+      TWINE_NON_INTERACTIVE: "true"
+    steps:
 
      - uses: actions/download-artifact@v3
        with:
          name: dist
 
-    #  - name: Upload dist files to the test PyPI
+     - uses: actions/setup-python@v2
+       with:
+         python-version: ${{ inputs.python-version }}
+
+     - uses: Install twine
+       run: |
+         pip install --progress-bar off twine
+
+     - name: Upload dist files to the test PyPI
+       env:
+         TWINE_PASSWORD: ${{ secrets.test-pypi-token }}
+         TWINE_REPOSITORY_URL: ${{ inputs.test-pypi-url }}
+       run: |
+         twine upload dist/*
+
+  install-test-pypi:
+    runs-on: ubuntu-latest
+    needs: [upload-test-pypi]
+
+    steps:
+
+     - uses: actions/setup-python@v2
+       with:
+         python-version: ${{ inputs.python-version }}
+
+     - name: Install ${{ inputs.pypi-name }}==${{ inputs.release-tag }} from test PyPI
+       env:
+         _wait_time_s: ${{ inputs.pip-install-retry-wait-time }}
+       run: |
+        until pip install --progress-bar off "${{ inputs.pypi-name }}==${{ inputs.release-tag }}"
+        do
+            echo "pip install failed; waiting $_wait_time_s seconds"
+            sleep "$_wait_time_s"
+        done
+
+     - name: Run tests
+       run: |
+         ${{ inputs.test-command }}
+
+  upload-pypi:
+    runs-on: ubuntu-latest
+    needs: [install-test-pypi]
+    env:
+      TWINE_USERNAME: __token__
+      TWINE_NON_INTERACTIVE: "true"
+    steps:
+
+     - uses: actions/download-artifact@v3
+       with:
+         name: dist
+
+     - uses: actions/setup-python@v2
+       with:
+         python-version: ${{ inputs.python-version }}
+
+     - uses: Install twine
+       run: |
+         pip install --progress-bar off twine
+
+     - name: Upload dist files to the test PyPI
+       env:
+         TWINE_PASSWORD: ${{ secrets.pypi-token }}
+         TWINE_REPOSITORY_URL: https://upload.pypi.org/legacy/
+       run: |
+         twine upload dist/*
 
   # upload:

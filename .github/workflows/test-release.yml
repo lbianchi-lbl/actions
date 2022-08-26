@@ -40,6 +40,9 @@ jobs:
       repository: ${{ matrix.repository }}
       pypi-name: ${{ matrix.pypi-name }}
       test-command: ${{ matrix.test-command }}
+    secrets:
+      test-pypi-token: ${{ secrets.TEST_PYPI_TOKEN }}
+      pypi-token: ${{ secrets.PYPI_TOKEN }}
 
   capture-env:
     if: false
