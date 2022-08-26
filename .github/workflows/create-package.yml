@@ -130,7 +130,7 @@ jobs:
        with:
          python-version: ${{ inputs.python-version }}
 
-     - uses: Install twine
+     - name: Install twine
        run: |
          pip install --progress-bar off twine
 
@@ -181,7 +181,7 @@ jobs:
        with:
          python-version: ${{ inputs.python-version }}
 
-     - uses: Install twine
+     - name: Install twine
        run: |
          pip install --progress-bar off twine
 
