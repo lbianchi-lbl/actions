@@ -31,6 +31,12 @@ on:
         type: string
         required: true
 
+      test-after-build:
+        description: Whether to run test command after build phase
+        type: boolean
+        required: false
+        default: true
+
       test-pypi-url:
         description: URL to the test PyPI index to use
         type: string
@@ -85,7 +91,8 @@ jobs:
         run: |
           pip show ${{ inputs.pypi-name }} | grep "${{ inputs.release-tag }}"
 
-      - name: Run smoke tests
+      - name: Run tests
+        if: ${{ inputs.test-after-build }}
         working-directory: /tmp
         run: |
           ${{ inputs.test-command }}
