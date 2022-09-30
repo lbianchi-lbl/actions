@@ -24,6 +24,7 @@ on:
 jobs:
 
   create-package:
+    name: Create package (${{ inputs.project-id }} ${{ inputs.release-tag }})
     strategy:
       fail-fast: true
       matrix:
