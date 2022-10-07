@@ -30,7 +30,7 @@ jobs:
       strategy: ${{ steps.set-matrix.outputs.strategy }}
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/matrixer
+      - uses: ./matrixer
         id: set-matrix
         with:
           data: |
