@@ -183,7 +183,7 @@ jobs:
        run: |
          pip install --progress-bar off twine
 
-     - name: Upload dist files to the test PyPI
+     - name: Upload dist files to the real PyPI
        env:
          TWINE_PASSWORD: ${{ secrets.pypi-token }}
          TWINE_REPOSITORY_URL: https://upload.pypi.org/legacy/
