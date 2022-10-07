@@ -21,6 +21,12 @@ on:
         type: string
         required: true
 
+      test-after-build:
+        description: Whether to run test command after initial package build
+        type: boolean
+        required: false
+        default: true
+
 jobs:
 
   matrixer:
@@ -50,7 +56,7 @@ jobs:
       repository: ${{ matrix.repository }}
       pypi-name: ${{ matrix.pypi-name }}
       test-command: ${{ matrix.test-command }}
-      test-after-build: false
+      test-after-build: ${{ inputs.test-after-build }}
     secrets:
       test-pypi-token: ${{ secrets.TEST_PYPI_TOKEN }}
       pypi-token: ${{ secrets.PYPI_TOKEN }}
