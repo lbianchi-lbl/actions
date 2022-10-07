@@ -23,28 +23,30 @@ on:
 
 jobs:
 
+  matrixer:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      strategy: ${{ steps.set-matrix.outputs.strategy }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/matrixer
+        id: set-matrix
+        with:
+          data: |
+            project-id: ${{ inputs.project-id }}
+            ---
+            !include data/projects/${{ inputs.project-id }}.yml
+            ---
+            release-tag: ${{ inputs.release-tag }}
+
   create-package:
-    name: Create package (${{ inputs.project-id }} ${{ inputs.release-tag }})
-    strategy:
-      fail-fast: true
-      matrix:
-        project:
-          - ${{ inputs.project-id }}
-        include:
-          # - project: idaes
-          #   repository: IDAES/idaes-pse
-          #   pypi-name: idaes-pse
-          #   test-command: idaes get-extensions --extra petsc --verbose && pip install pytest && wget https://raw.githubusercontent.com/IDAES/idaes-pse/main/pytest.ini && pytest --pyargs idaes -m "not integration" -x
-          - project: watertap
-            repository: watertap-org/watertap
-            pypi-name: watertap
-            test-command: |
-              idaes get-extensions --verbose && \
-              pip install pytest json-schema-for-humans mongomock && \
-              pytest --pyargs watertap -m "not integration" -x
+    name: Create package (${{ matrix.project-id }} ${{ matrix.release-tag }})
+    needs: [matrixer]
+    strategy: ${{ fromJSON(needs.matrixer.outputs.strategy) }}
     uses: ./.github/workflows/create-package.yml
     with:
-      release-tag: ${{ inputs.release-tag }}
+      release-tag: ${{ matrix.release-tag }}
       repository: ${{ matrix.repository }}
       pypi-name: ${{ matrix.pypi-name }}
       test-command: ${{ matrix.test-command }}
@@ -57,10 +59,12 @@ jobs:
     if: false
     name: Capture env
     runs-on: ubuntu-latest
+    needs: [matrixer]
+    strategy: ${{ fromJSON(needs.matrixer.outputs.strategy) }}
     steps:
       - uses: lbianchi-lbl/actions/release/capture-env@main
         with:
-          pypi-name: ${{ inputs.python-name }}
-          pypi-version: ${{ inputs.release-tag }}
+          pypi-name: ${{ matrix.pypi-name }}
+          pypi-version: ${{ matrix.release-tag }}
           python-version: '3.9'
-          upload-artifact: ${{ inputs.python-name }}-${{ inputs.release-tag }}
+          upload-artifact: ${{ matrix.pypi-name }}-${{ matrix.release-tag }}

@@ -1,0 +1,45 @@
+name: matrixer
+description: Hijack the `strategy` field to assign arbitrary key-value pairs to the `matrix` context
+
+inputs:
+
+  data:
+    description: |
+      YAML string containing data to be assigned.
+
+      It can contain multiple document stream (separated by ---), which will be merged
+      in the order they are defined (i.e. last one wins).
+
+      A document stream can consist of either:
+      - A literal mapping (key-value pairs)
+      - The string `!include ` followed by a path to a YAML file containing such a mapping,
+        in which case the content of the file will be loaded at the corresponding stream position
+    required: true
+
+outputs:
+  
+  matrix:
+    description: JSON string for the `matrix` field
+    value: ${{ steps.generate.outputs.matrix }}
+  
+  strategy:
+    description: JSON string for the `strategy` field
+    value: ${{ steps.generate.outputs.strategy }}
+
+runs:
+  using: composite
+  steps:
+
+  - name: Set up python
+    uses: actions/setup-python@v2
+    with:
+      python-version: "3.10"
+
+  - name: Generate matrix
+    shell: bash {0}
+    id: generate
+    env:
+      PYTHONPATH: ${{ github.action_path }}
+    run: |
+      pip install --progress-bar off pyyaml
+      python -m matrixer "${{ inputs.data }}"

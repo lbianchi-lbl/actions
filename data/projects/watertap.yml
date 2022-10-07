@@ -1,0 +1,6 @@
+repository: watertap-org/watertap
+pypi-name: watertap
+test-command: |
+  idaes get-extensions --verbose && \
+  pip install pytest json-schema-for-humans mongomock && \
+  pytest --pyargs watertap -m "not integration" -x
