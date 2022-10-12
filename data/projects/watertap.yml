@@ -4,3 +4,5 @@ test-command: |
   idaes get-extensions --verbose && \
   pip install pytest json-schema-for-humans mongomock && \
   pytest --pyargs watertap -m "not integration" -x
+default-python-version: "3.10"
+build-command: python setup.py sdist bdist_wheel

@@ -26,6 +26,12 @@ on:
         default: '3.9'
         type: string
 
+      build-command:
+        description: Command to run to generate package files
+        required: false
+        type: string
+        default: python setup.py sdist bdist_wheel
+
       test-command:
         description: Command(s) to use to ensure successfull installation
         type: string
@@ -92,8 +98,7 @@ jobs:
           ${{ inputs.test-command }}
 
       - name: Generate dist files
-        run: |
-          python setup.py sdist bdist_wheel
+        run: ${{ inputs.build-command }}
 
       - name: Check that the dist directory's size is below PyPI's maximum
         run: |

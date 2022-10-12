@@ -55,6 +55,7 @@ jobs:
       release-tag: ${{ matrix.release-tag }}
       repository: ${{ matrix.repository }}
       pypi-name: ${{ matrix.pypi-name }}
+      build-command: ${{ matrix.build-command }}
       test-command: ${{ matrix.test-command }}
       test-after-build: ${{ inputs.test-after-build }}
     secrets:
