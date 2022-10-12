@@ -1,0 +1,6 @@
+repository: CCSI-Toolset/FOQUS
+pypi-name: ccsi-foqus
+test-command: |
+  foqus --help
+default-python-version: "3.8"
+build-command: rm -r examples/ && python setup.py sdist bdist_wheel
