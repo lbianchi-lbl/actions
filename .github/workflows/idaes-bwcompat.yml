@@ -71,6 +71,7 @@ jobs:
           pip install "${{ matrix.pip-target }}"
 
       - name: Install IDAES (${{ inputs.idaes-ref }})
+        run: |
           pip uninstall --yes idaes-pse
           pip install "$IDAES_PIP_TARGET"
           idaes get-extensions --verbose
