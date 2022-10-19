@@ -69,11 +69,10 @@ jobs:
       - name: Install external codebase (${{ matrix.pip-target }})
         run: |
           pip install "${{ matrix.pip-target }}"
+
+      - name: Install IDAES (${{ inputs.idaes-ref }})
           pip uninstall --yes idaes-pse
           pip install "$IDAES_PIP_TARGET"
-
-      - name: Install IDAES extensions
-        run: |
           idaes get-extensions --verbose
 
       - name: Run test command
@@ -110,13 +109,14 @@ jobs:
           repository: IDAES/examples-pse
           ref: ${{ matrix.examples-ref }}
 
-      - name: Install examples packages and/or dependencies
+      - name: Install IDAES examples (${{ inputs.examples-ref }})
         run: pip install ${{ matrix.pip-target }}
 
       - name: Install IDAES (${{ inputs.idaes-ref }})
         run: |
           pip uninstall idaes-pse --yes
           pip install "$IDAES_PIP_TARGET"
+          idaes get-extensions --verbose
 
       - name: Download build config file
         run: |
