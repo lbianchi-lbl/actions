@@ -1,16 +1,20 @@
 on:
 
   workflow_call:
-    idaes-ref:
-      description: Git ref of the IDAES/idaes-pse repo to be used
-      required: false
-      default: 2.0.0a3
+    inputs:
+      idaes-ref:
+        description: Git ref of the IDAES/idaes-pse repo to be used
+        required: false
+        type: string
+        default: 2.0.0a3
 
   workflow_dispatch:
-    idaes-ref:
-      description: Git ref of the IDAES/idaes-pse repo to be used
-      required: false
-      default: 2.0.0a3
+    inputs:
+      idaes-ref:
+        description: Git ref of the IDAES/idaes-pse repo to be used
+        type: string
+        required: false
+        default: 2.0.0a3
 
 defaults:
   run:
