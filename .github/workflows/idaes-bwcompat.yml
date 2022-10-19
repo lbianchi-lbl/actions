@@ -1,0 +1,124 @@
+on:
+
+  workflow_call:
+    idaes-ref:
+      description: Git ref of the IDAES/idaes-pse repo to be used
+      required: false
+      default: 2.0.0a3
+
+  workflow_dispatch:
+    idaes-ref:
+      description: Git ref of the IDAES/idaes-pse repo to be used
+      required: false
+      default: 2.0.0a3
+
+defaults:
+  run:
+    # -l: login shell, needed when using Conda
+    shell: bash -l {0}
+
+env:
+  PYTEST_ADDOPTS: "--color=yes"
+  PIP_PROGRESS_BAR: "off"
+  PYTHON_VERSION: '3.9'
+  CONDA_ENV: idaes-pse-dev
+  idaes_pip_target: idaes-pse @ https://github.com/IDAES/idaes-pse/archive/${{ inputs.idaes-ref }}.zip
+
+jobs:
+
+  legacy-project:
+    name: Run legacy code (${{ matrix.codebase }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        codebase:
+          - watertap-0.6.0rc0
+          - watertap-0.5.0
+          - watertap-0.4.0
+          - dispatches-1.0.0
+        include:
+          - codebase: watertap-0.6.0rc0
+            pip-target: watertap[testing]==0.6.0rc0
+            test-command: |
+              pytest --pyargs watertap -m "not integration"
+          - codebase: watertap-0.5.0
+            pip-target: watertap[testing]==0.5.0
+            test-command: |
+              pytest --pyargs watertap -m "not integration"
+          - codebase: watertap-0.4.0
+            pip-target: watertap[testing]==0.4.0
+            test-command: |
+              pytest --pyargs watertap -m "not integration"
+          - codebase: dispatches-1.0.0
+            pip-target: dispatches==1.0.0
+            test-command: |
+              pytest --pyargs dispatches -m "not integration"
+
+    steps:
+      
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install external codebase (${{ matrix.pip-target }})
+        run: |
+          pip install "${{ matrix.pip-target }}"
+          pip uninstall --yes idaes-pse
+          pip install "$IDAES_PIP_TARGET"
+
+      - name: Install IDAES extensions
+        run: |
+          idaes get-extensions --verbose
+
+      - name: Run test command
+        run: ${{ matrix.test-command }}
+
+  legacy-examples:
+    name: Run legacy examples (${{ matrix.examples-ref }})
+    runs-on: ubuntu-latest
+
+    env:
+      BUILD_CONFIG_URL: https://raw.githubusercontent.com/IDAES/idaes-pse/285e7187d6eda8a7009be380978cec9761fe88e2/.github/actions/run-examples/build-config-for-idaes-ci.yml
+      BUILD_CONFIG_PATH: build-config-idaes.yml
+    strategy:
+      fail-fast: false
+      matrix:
+        examples-ref:
+          - "1.13.0"
+          - "2.0.0a3"
+        include:
+          - examples-ref: "1.13.0"
+            pip-target: -r requirements.txt
+          - examples-ref: "2.0.0a3"
+            pip-target: -r requirements.txt
+
+    steps:
+      - name: Set up Conda environment
+        uses: conda-incubator/setup-miniconda@v2.1.1
+        with:
+          activate-environment: ${{ env.CONDA_ENV }}
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - uses: actions/checkout@v3
+        with:
+          repository: IDAES/examples-pse
+          ref: ${{ matrix.examples-ref }}
+
+      - name: Install examples packages and/or dependencies
+        run: pip install ${{ matrix.pip-target }}
+
+      - name: Install IDAES (${{ inputs.idaes-ref }})
+        run: |
+          pip uninstall idaes-pse --yes
+          pip install "$IDAES_PIP_TARGET"
+
+      - name: Download build config file
+        run: |
+          wget "$BUILD_CONFIG_URL" -O "$BUILD_CONFIG_PATH"
+          cat "$BUILD_CONFIG_PATH"
+
+      - name: Run build.py script
+        run: |
+          python build.py -v --config "$BUILD_CONFIG_PATH" --test
