@@ -109,7 +109,7 @@ jobs:
           repository: IDAES/examples-pse
           ref: ${{ matrix.examples-ref }}
 
-      - name: Install IDAES examples (${{ inputs.examples-ref }})
+      - name: Install IDAES examples (${{ matrix.examples-ref }})
         run: pip install ${{ matrix.pip-target }}
 
       - name: Install IDAES (${{ inputs.idaes-ref }})
