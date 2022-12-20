@@ -1,0 +1,8 @@
+repository: gmlc-dispatches/dispatches
+pypi-name: dispatches
+test-command: |
+  idaes get-extensions --verbose
+  pip install pytest
+  pytest --pyargs dispatches
+default-python-version: "3.8"
+build-command: python setup.py sdist bdist_wheel
