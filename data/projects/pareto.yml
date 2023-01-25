@@ -1,0 +1,8 @@
+repository: project-pareto/project-pareto
+pypi-name: project-pareto
+test-command: |
+  idaes get-extensions --verbose
+  pip install pytest
+  pytest --pyargs pareto -m "unit" -x
+default-python-version: "3.10"
+build-command: python setup.py sdist bdist_wheel
