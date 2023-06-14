@@ -1,0 +1,6 @@
+repository: IDAES/examples
+pypi-name: idaes-examples
+test-command:
+  python -c 'from importlib.metadata import version; print(version("idaes-examples"))'
+default-python-version: "3.10"
+build-command: python -m build
