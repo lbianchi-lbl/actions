@@ -1,4 +1,5 @@
 name: Release (test)
+run-name: Release (${{ inputs.project-id }}/${{ inputs.release-tag }})
 
 on:
   workflow_dispatch:
