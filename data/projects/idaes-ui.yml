@@ -1,0 +1,6 @@
+repository: IDAES/idaes-ui
+pypi-name: idaes-ui
+test-command:
+  python -c 'from importlib.metadata import version; print(version("idaes-ui"))'
+default-python-version: "3.10"
+build-command: pip install build && python -m build

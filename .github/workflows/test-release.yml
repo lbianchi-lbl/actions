@@ -12,6 +12,7 @@ on:
         options:
         - idaes
         - idaes-examples
+        - idaes-ui
         - watertap
         - dispatches
         - ccsi-foqus
