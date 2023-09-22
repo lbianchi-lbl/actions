@@ -3,4 +3,6 @@ pypi-name: idaes-examples
 test-command:
   python -c 'from importlib.metadata import version; print(version("idaes-examples"))'
 default-python-version: "3.10"
-build-command: pip install build && python -m build
+# we specify --wheel because the package size is large enough (71M)
+# hat the default behavior of building sdist + wheel would push it past the PyPI 100M maximum
+build-command: pip install build && python -m build --wheel
