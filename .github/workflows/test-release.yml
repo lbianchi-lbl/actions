@@ -18,6 +18,7 @@ on:
         - dispatches
         - ccsi-foqus
         - pareto
+        - prommis
 
       release-tag:
         description: Version tag of the release
