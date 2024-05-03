@@ -19,6 +19,7 @@ on:
         - ccsi-foqus
         - pareto
         - prommis
+        - parameter-sweep
 
       release-tag:
         description: Version tag of the release

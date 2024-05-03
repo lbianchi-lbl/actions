@@ -1,0 +1,8 @@
+repository: watertap-org/parameter-sweep
+pypi-name: parameter-sweep
+test-command: |
+  idaes get-extensions --verbose
+  pip install pytest
+  pytest --pyargs parameter_sweep
+default-python-version: "3.11"
+build-command: pip install build && python -m build
