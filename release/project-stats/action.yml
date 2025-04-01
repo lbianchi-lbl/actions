@@ -35,7 +35,7 @@ runs:
         
         pypi_name = "${{ inputs.pypi-name }}"
         nb_in = Path("${{ inputs.notebook-file }}")
-        nb_out = nb_in.with_name(pypi_name).with_suffix(nb_in.suffix)
+        nb_out = nb_in
 
         pm.execute_notebook(
             nb_in,
