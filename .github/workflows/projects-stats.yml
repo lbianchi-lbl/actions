@@ -12,6 +12,17 @@ on:
         required: false
         type: string
 
+      start-date:
+        description: Start date in YYYY-MM-DD format
+        type: string
+        required: true
+
+      end-date:
+        description: End date in YYYY-MM-DD format
+        type: string
+        required: false
+        default: ''
+
 jobs:
   pypi-download-counts:
 
@@ -21,3 +32,5 @@ jobs:
       - uses: ./release/project-stats
         with:
           pypi-name: ${{ inputs.pypi-name }}
+          start-date: ${{ inputs.start-date }}
+          end-date: ${{ inputs.end-date }}

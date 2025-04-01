@@ -5,6 +5,17 @@ inputs:
   pypi-name:
     description: Name of the package distribution on PyPI
     required: true
+
+  start-date:
+    description: Start date in YYYY-MM-DD format
+    required: false
+    default: ''
+
+  end-date:
+    description: End date in YYYY-MM-DD format
+    required: true
+    default: ''
+
   notebook-file:
     description: File name/path to the notebook to use for the analysis
     required: false
@@ -42,6 +53,8 @@ runs:
             nb_out,
             parameters=dict(
               pypi_name=pypi_name,
+              start_date="${{ inputs.start-date }}" or None,
+              end_date="${{ inputs.end-date }}" on None,
             )
         )
         '
