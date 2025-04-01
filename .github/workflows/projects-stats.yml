@@ -8,7 +8,8 @@ on:
 
       pypi-name:
         description: Name of the package distribution on PyPI
-        required: true
+        default: ccsi-foqus
+        required: false
         type: string
 
 jobs:
