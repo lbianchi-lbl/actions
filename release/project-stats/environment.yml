@@ -7,5 +7,6 @@ dependencies:
   - nbconvert
   - papermill
   - ipykernel
+  - pypistats
   - plotly
   - pandoc
