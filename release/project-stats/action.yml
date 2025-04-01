@@ -28,7 +28,7 @@ runs:
         python -c '
         from pathlib import Path
 
-        import papermill as pn
+        import papermill as pm
         
         pypi_name = "${{ inputs.pypi-name }}"
         nb_in = Path("${{ inputs.notebook-file }}")
