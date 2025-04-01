@@ -18,7 +18,7 @@ runs:
         ls -lRh
     - uses: conda-incubator/setup-miniconda@v3
       with:
-        environment-file: ${{ github.action_path }}/environment.yml
+        environment-file: release/project-stats/environment.yml
         miniforge-version: latest
     - name: Run parametrize notebook
       shell: python {0}
