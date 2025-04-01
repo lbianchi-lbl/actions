@@ -14,6 +14,9 @@ runs:
   using: composite
   steps:
     - uses: actions/checkout@v4
+    - shell: bash -l {0}
+      run: |
+        ls -lRh
     - uses: conda-incubator/setup-miniconda@v3
       with:
         environment-file: environment.yml
