@@ -36,3 +36,8 @@ runs:
               pypi_name=pypi_name,
             )
         )
+    - name: Convert notebook to Markdown
+      shell: bash -l {0}
+      run: |
+        jupyter nbconvert "${{ inputs.notebook-file }}" --to markdown
+        cat *.md >> $GITHUB_STEP_SUMMARY
