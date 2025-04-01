@@ -20,6 +20,7 @@ runs:
       with:
         environment-file: release/project-stats/environment.yml
         miniforge-version: latest
+        activate-environment: project-stats
     - name: Run parametrize notebook
       shell: python {0}
       working-directory: ${{ github.action_path }}
