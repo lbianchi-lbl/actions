@@ -21,6 +21,9 @@ runs:
         environment-file: release/project-stats/environment.yml
         miniforge-version: latest
         activate-environment: project-stats
+    - shell: bash -l {0}
+      run: |
+        python -m ipykernel install --user --name="project-stats"
     - name: Run parametrize notebook
       shell: bash -l {0}
       working-directory: ${{ github.action_path }}
