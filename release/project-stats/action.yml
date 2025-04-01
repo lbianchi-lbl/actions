@@ -19,10 +19,11 @@ runs:
         ls -lRh
     - uses: conda-incubator/setup-miniconda@v3
       with:
-        environment-file: environment.yml
+        environment-file: ${{ github.action_path }}/environment.yml
         miniforge-version: latest
     - name: Run parametrize notebook
       shell: python {0}
+      working-directory: ${{ github.action_path }}
       run: |
         from pathlib import Path
 
@@ -41,6 +42,7 @@ runs:
         )
     - name: Convert notebook to Markdown
       shell: bash -l {0}
+      working-directory: ${{ github.action_path }}
       run: |
         jupyter nbconvert "${{ inputs.notebook-file }}" --to markdown
         cat *.md >> $GITHUB_STEP_SUMMARY
