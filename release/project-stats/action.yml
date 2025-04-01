@@ -57,5 +57,5 @@ runs:
       with:
         name: project-stats
         path: |
-          ${{ github.action_path }}/*.html
-          ${{ github.action_path }}/*.md
+          **/*.html
+          **/*.md
