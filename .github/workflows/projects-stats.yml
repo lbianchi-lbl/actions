@@ -1,0 +1,22 @@
+name: Project stats
+run-name: Project stats for ${{ inputs.pypi-name }}
+
+on:
+
+  workflow_dispatch:
+    inputs:
+
+      pypi-name:
+        description: Name of the package distribution on PyPI
+        required: true
+        type: string
+
+jobs:
+  pypi-download-counts:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./release/project-stats
+        with:
+          pypi-name: ${{ inputs.pypi-name }}
