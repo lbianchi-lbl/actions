@@ -54,7 +54,7 @@ runs:
             parameters=dict(
               pypi_name=pypi_name,
               start_date="${{ inputs.start-date }}" or None,
-              end_date="${{ inputs.end-date }}" on None,
+              end_date="${{ inputs.end-date }}" or None,
             )
         )
         '
