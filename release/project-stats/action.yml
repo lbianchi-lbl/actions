@@ -22,9 +22,10 @@ runs:
         miniforge-version: latest
         activate-environment: project-stats
     - name: Run parametrize notebook
-      shell: python {0}
+      shell: bash -l {0}
       working-directory: ${{ github.action_path }}
       run: |
+        python -c '
         from pathlib import Path
 
         import papermill as pn
@@ -40,6 +41,7 @@ runs:
               pypi_name=pypi_name,
             )
         )
+        '
     - name: Convert notebook to Markdown
       shell: bash -l {0}
       working-directory: ${{ github.action_path }}
